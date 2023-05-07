@@ -485,7 +485,7 @@ type SubstanceInfo struct {
 type PersonalData struct {
 	CreatedDate           time.Time `json:"CreatedDate"`
 	Name                  string    `json:"Name"`
-	Birthdate             Date      `json:"Birthdate"`
+	Birthdate             string    `json:"Birthdate"`
 	Age                   uint8     `json:"Age"`
 	Gender                string    `json:"Gender"`
 	ModeOfReach           string    `json:"ModeOfReach"`

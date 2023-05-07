@@ -67,6 +67,7 @@ const MedicalHistory = () => {
         statusECT: statusECT,
         statusPsychotherapy: statusPsychotherapy,
         email: email,
+        ID: id,
     } = Cookie(url);
 
     const bgColor = useColorModeValue('gray.50', 'whiteAlpha.50');
@@ -357,8 +358,11 @@ const MedicalHistory = () => {
 
         e.preventDefault();
 
-        const response = await fetch('http://localhost:3000/api/uploadEMR', {
+        let ID = id.toString();
+
+        const response = await fetch('http://localhost:3000/Wallet', {
             body: JSON.stringify({
+                    "wallet_address": ID,
                     ...emrData
                 }
             ),
@@ -368,13 +372,27 @@ const MedicalHistory = () => {
         });
 
 
-        if (response.status === 202) {
+        if (response.status === 200) {
+
+            const Response = await fetch('http://localhost:3000/transaction', {
+                body: JSON.stringify({
+                        "wallet_address": ID,
+                    }
+                ),
+                credentials: 'include',
+                headers: {'Content-Type': 'application/json'},
+                method: 'POST'
+            });
+
+            console.log(Response)
+
             Toast = (toast({
                 title: 'Successfully Uploaded the data',
                 status: 'success',
                 duration: 5000,
                 isClosable: true,
             }))
+
 
         } else if (response.status === 400 || response.status === 406 || response.status === 401) {
             Toast = (

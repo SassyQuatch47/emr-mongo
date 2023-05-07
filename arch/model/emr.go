@@ -492,8 +492,8 @@ type PersonalData struct {
 	SymptomsBrief         string    `json:"SymptomsBrief"`
 	PrevPractitioners     string    `json:"PrevPractitioners"`
 	PsychHospitalizations string    `json:"PsychHospitalizations"`
-	StatusECT             bool      `json:"StatusECT"`
-	StatusPsychotherapy   bool      `json:"StatusPsychotherapy"`
+	StatusECT             string    `json:"StatusECT"`
+	StatusPsychotherapy   string    `json:"StatusPsychotherapy"`
 }
 
 type CurrentMedications struct {

@@ -2,6 +2,7 @@ package routers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	emrBlockChain "github.com/ssnair610/EMR-blockchain/EMR-blockchain/bin"
 	"github.com/ssnair610/EMR-blockchain/uplink/controllers"
 )
 
@@ -44,5 +45,13 @@ func FrontEndRoutes(app *fiber.App) {
 	app.Get("api/getPatientEmrData", controllers.EmrDownloadController)
 
 	app.Post("/api/logOut", controllers.LogOut)
+
+	app.Get("/getBlockChain", emrBlockChain.GetBlockchain)
+	//
+	//app.Get("/transaction", emrBlockChain.GetBlockchain)
+	//app.Get("/Wallet", emrBlockChain.GetBlockchain)
+
+	app.Post("/transaction", emrBlockChain.WriteBlock)
+	app.Post("/Wallet", emrBlockChain.NewMedicalRecord)
 
 }

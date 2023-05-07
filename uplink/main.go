@@ -5,6 +5,7 @@ package main
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html"
+	emrBlockChain "github.com/ssnair610/EMR-blockchain/EMR-blockchain/bin"
 	"github.com/ssnair610/EMR-blockchain/uplink/initializers" // initializers contains envVars.go which will load in the required environment variables.
 	"github.com/ssnair610/EMR-blockchain/uplink/routers"
 	"log"
@@ -14,6 +15,8 @@ import (
 func init() {
 	initializers.LoadEnvVars() // Loading the environment variables before the main function is executed.
 	//initializers.ConnectToDb() // Connect to the database
+	emrBlockChain.InitializeBC()
+
 }
 
 func main() {

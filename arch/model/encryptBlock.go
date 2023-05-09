@@ -93,7 +93,7 @@ import (
 	"log"
 )
 
-func EncryptBlock(emrData EMR) {
+func EncryptBlock(emrData EMR) []byte {
 
 	reqBodyBytes := new(bytes.Buffer)
 	err := json.NewEncoder(reqBodyBytes).Encode(emrData)
@@ -129,7 +129,7 @@ func EncryptBlock(emrData EMR) {
 
 	cipherText := gcm.Seal(nonce, nonce, textToBeEncrypted, nil)
 
-	fmt.Println(cipherText)
+	return cipherText
 
 	//end := time.Now()
 	//fmt.Printf("Encrytion Time: %v ns\n", end.Sub(start).Nanoseconds())

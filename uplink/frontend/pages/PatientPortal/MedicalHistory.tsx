@@ -360,9 +360,8 @@ const MedicalHistory = () => {
 
         let ID = id.toString();
 
-        const response = await fetch('http://localhost:3000/Wallet', {
+        const response = await fetch('http://localhost:3000/api/uploadEMR', {
             body: JSON.stringify({
-                    "wallet_address": ID,
                     ...emrData
                 }
             ),
@@ -372,7 +371,7 @@ const MedicalHistory = () => {
         });
 
 
-        if (response.status === 200) {
+        if (response.status === 202) {
 
             const Response = await fetch('http://localhost:3000/transaction', {
                 body: JSON.stringify({
@@ -384,7 +383,6 @@ const MedicalHistory = () => {
                 method: 'POST'
             });
 
-            console.log(Response)
 
             Toast = (toast({
                 title: 'Successfully Uploaded the data',

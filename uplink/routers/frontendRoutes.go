@@ -52,6 +52,6 @@ func FrontEndRoutes(app *fiber.App) {
 	//app.Get("/Wallet", emrBlockChain.GetBlockchain)
 
 	app.Post("/transaction", emrBlockChain.WriteBlock)
-	app.Post("/Wallet", emrBlockChain.NewMedicalRecord)
+	//app.Post("/Wallet", emrBlockChain.NewMedicalRecord)
 
 }

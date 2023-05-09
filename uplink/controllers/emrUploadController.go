@@ -33,6 +33,8 @@ func EmrUploadController(app *fiber.Ctx) error {
 	body := app.Body() // Get the request body
 	var emrData model.EMR
 
+	fmt.Println(emrData)
+
 	defer cancel()
 
 	cookie := app.Cookies("jwt-token")
@@ -66,9 +68,6 @@ func EmrUploadController(app *fiber.Ctx) error {
 		//fmt.Println("you shouldn't be here")
 		log.Fatal(err)
 	}
-
-	fmt.Println("Data is set")
-
 	return app.Status(fiber.StatusAccepted).JSON(responses.UserResponse{Status: fiber.StatusAccepted, Message: "Document accepted"})
 }
 

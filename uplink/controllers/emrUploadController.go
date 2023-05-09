@@ -26,6 +26,40 @@ import (
 
 var userEmr = initializers.GetCollection(initializers.DB, "user", "emr")
 
+func EmrProcess(app *fiber.Ctx) error {
+	_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+
+    body := app.Body() // Get the request body
+    var emrData model.EMR
+
+    defer cancel()
+
+    cookie := app.Cookies("jwt-token")
+    _, err := jwt.ParseWithClaims(cookie, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
+        return []byte(SecretKey), nil
+    })
+
+    if err != nil {
+        return app.Status(fiber.StatusUnauthorized).JSON(responses.UserResponse{Status: fiber.StatusUnauthorized, Message: "User is Unauthenticated"})
+    }
+
+
+    if err != nil {
+        return app.Status(fiber.StatusBadRequest).JSON(responses.UserResponse{Status: fiber.StatusBadRequest, Message: "User not found in Database", Data: &fiber.Map{"data": err.Error()}})
+    }
+
+    if err = json.Unmarshal(body, &emrData); err != nil {
+        return app.Status(fiber.StatusExpectationFailed).JSON(responses.UserResponse{Status: fiber.StatusExpectationFailed, Message: "Unable to read!!"})
+
+    }
+
+	// wallet := model.NewWallet() //store emr hashcode in wallet
+	emrEncrypted := model.EncryptBlock(emrData)
+	
+	return app.Status(fiber.StatusAccepted).JSON(emrEncrypted)
+	// forwards to MongoDB, adjust as such
+}
+
 func EmrUploadController(app *fiber.Ctx) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)

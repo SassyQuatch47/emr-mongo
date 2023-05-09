@@ -89,12 +89,11 @@ import (
 	"crypto/rand"
 	"encoding/json"
 	"fmt"
-	emrBlockChain "github.com/ssnair610/EMR-blockchain/EMR-blockchain/bin"
 	"io"
 	"log"
 )
 
-func EncryptBlock(emrData emrBlockChain.MedicalRecord) {
+func EncryptBlock(emrData EMR) []byte {
 
 	reqBodyBytes := new(bytes.Buffer)
 	err := json.NewEncoder(reqBodyBytes).Encode(emrData)
@@ -130,7 +129,7 @@ func EncryptBlock(emrData emrBlockChain.MedicalRecord) {
 
 	cipherText := gcm.Seal(nonce, nonce, textToBeEncrypted, nil)
 
-	fmt.Println(cipherText)
+	return cipherText
 
 	//end := time.Now()
 	//fmt.Printf("Encrytion Time: %v ns\n", end.Sub(start).Nanoseconds())

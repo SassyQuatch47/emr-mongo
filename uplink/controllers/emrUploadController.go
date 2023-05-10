@@ -105,6 +105,49 @@ func EmrUploadController(app *fiber.Ctx) error {
 	return app.Status(fiber.StatusAccepted).JSON(responses.UserResponse{Status: fiber.StatusAccepted, Message: "Document accepted"})
 }
 
+func EmrRead(app *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	var patientEMR model.EMR
+	var encryptedEMR []byte
+
+	defer cancel()
+
+	cookie := app.Cookies("jwt-token")
+	token, err := jwt.ParseWithClaims(cookie, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(SecretKey), nil
+	})
+
+	if err != nil {
+		return app.Status(fiber.StatusUnauthorized).JSON(responses.UserResponse{Status: fiber.StatusUnauthorized, Message: "User is Unauthenticated"})
+	}
+
+	claims := token.Claims.(*jwt.RegisteredClaims)
+	_, err = primitive.ObjectIDFromHex(claims.Issuer)
+
+	if err != nil {
+		return app.Status(fiber.StatusBadRequest).JSON(responses.UserResponse{Status: fiber.StatusBadRequest, Message: "Document not found in Database", Data: &fiber.Map{"data": err.Error()}})
+	}
+
+	objectID, err := primitive.ObjectIDFromHex("643e431a2150765dbceb937d")
+
+	filter := bson.M{"_id": objectID}
+
+	if err = userEmr.FindOne(ctx, filter).Decode(&encryptedEMR); err != nil {
+		if err == mongo.ErrNoDocuments {
+
+			// This error means your query did not match any documents.
+			return app.Status(fiber.StatusBadRequest).JSON(responses.UserResponse{Status: fiber.StatusBadRequest, Message: "Account doesnt exist wow	", Data: &fiber.Map{"data": err.Error()}})
+
+		}
+		log.Fatal(err)
+	}
+
+	patientEMR := decryptBlock(encryptedEMR)
+	// decryptBlock to be implemented in encryptBlock.go
+
+	return app.JSON(patientEMR)
+}
+
 func EmrDownloadController(app *fiber.Ctx) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
